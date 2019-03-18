@@ -1,0 +1,435 @@
+<apex:page StandardController="Account" extensions="ParleyProNewContractController" action="{!getRequest}">
+
+<script type="text/javascript">
+
+
+   function checkEmail(email) {
+var regExp = /(^[a-z]([a-z0-9_\.]*)@([a-z_\.]*)([.][a-z]{3})$)|(^[a-z]([a-z_\.]*)@([a-z_\.]*)(\.[a-z]{3})(\.[a-z]{2})*$)/i;
+return regExp.test(email);
+}
+
+function checkEmails(){
+   var element1 = document.getElementById('emailsId1');
+   var element2 = document.getElementById('emailsId2');
+   var element3 = document.getElementById('emailsId3');
+    if (element1 != null)
+        var emails1 = document.getElementById("emailsId1").value;
+        else if(element3 != null)
+        var emails3 = document.getElementById("emailsId3").value;
+    else if(element2 != null)
+        var emails2 = document.getElementById("emailId2").value;
+    
+    var emailArray = '';
+    if(emails1 != null && emails1 != '' )
+     emailArray = emails1.split(",");
+     else if(emails2 != null && emails2 != '')
+     emailArray = emails2.split(",");
+     else if(emails3 != null && emails3 != '')
+      emailArray = emails3.split(",");
+    var hasErrors=false;
+    var errorMessage="";
+    for(i = 0; i <= (emailArray.length - 1); i++){
+        if(checkEmail(emailArray[i])){
+            //Do what ever with the email.
+        console.log('1');
+        }else{
+            hasErrors = true;
+            errorMessage+="invalid email: " + emailArray[i]+"\n\r";         
+        }
+    }
+    if(hasErrors){
+    console.log('3');
+        alert(errorMessage);
+    }else{
+        console.log('4');
+        buttonfun(emailArray);
+    }
+}
+
+function ContractName(val){
+console.log('val--->'+val);
+        if(val != null){
+            acctfuns(val);
+        }
+    }
+    
+var maxStringSize = 6000000;
+var attachmentList;
+var j;
+function uploadFiles()
+{
+    input = document.getElementById('fileinput');
+    attachmentList = input.files;
+    var filePath = input.value;
+    var allowedExtensions = /(\.doc|\.docx|\.pdf)$/i;
+    if(!allowedExtensions.exec(filePath)){
+         document.getElementById('fileID').innerHTML="Please upload file having extensions .doc/.docx/.pdf only.";
+        fileInput.value = '';
+        return false;
+    }else{      
+    if(j == undefined) 
+    j = 0;   
+    var file;
+    if(j < attachmentList.length)
+    {
+        file = attachmentList[j];
+     var name = file.name;
+        var reader = new FileReader();  
+        reader.onload = function(e) {  
+         var attachmentbodybase64 = window.btoa(reader.result)
+            console.log(attachmentbodybase64.length);
+            if(attachmentbodybase64.length > maxStringSize )
+            alert("File size is too large to handle");
+            else
+            {
+                j++;
+                saveFileAF(attachmentbodybase64, name);
+            }
+        }
+         reader.readAsDataURL(file);
+    }
+    else
+    {
+        document.getElementById('fileID').innerHTML="Please Select File."; 
+       /* console.log('this is end');
+        var url = window.location.origin + '/'+"{!$CurrentPage.parameters.Id}";
+        console.log(url);
+        window.location.href = url;*/
+    }
+  }  
+ }
+</script>
+
+    <apex:pageMessages id="msg"/>
+    <apex:slds />
+    <apex:form id="frm">
+    <apex:actionStatus id="uploadings">
+                    <apex:facet name="start">
+                        <div class="slds-spinner_container" style="position:fixed">
+                            <div role="status" class="slds-spinner slds-spinner_medium" style="position:fixed">
+                                <span class="slds-assistive-text">Loading your Orders</span>
+                                <div class="slds-spinner__dot-a"></div>
+                                <div class="slds-spinner__dot-b"></div>
+                            </div>
+                        </div>          
+                    </apex:facet>
+    </apex:actionStatus>     
+      <apex:actionFunction action="{!getContractName}" name="acctfun" rerender="accName,accName1,accName2,accName3" status="uploadings">
+            <apex:param name="s" assignTo="{!selectedTemplates}" value="" />
+    </apex:actionFunction>
+     <apex:actionFunction action="{!getContractName}" name="acctfunction" rerender="None" status="uploadings">
+            <apex:param name="s1" assignTo="{!selectedNegotiator}" value="" />
+    </apex:actionFunction>
+    <apex:actionFunction action="{!createContract}" name="buttonfun" rerender="None" status="uploadings">
+     <apex:param name="s2" assignTo="{!emails}" value="" />
+     </apex:actionFunction>
+      <apex:actionFunction action="{!getContractName}" name="acctfuns" rerender="tab1,tab2,tab3,tab4,tab5,tabs" status="uploadings">
+            <apex:param name="s" assignTo="{!selectedTab}" value="" />
+    </apex:actionFunction>
+    
+    <div class="slds-tabs_card slds-tabs_default">
+   <apex:outputPanel id="tabs">
+  <ul class="slds-tabs_default__nav" role="tablist">
+  
+   <apex:outputText rendered="{!if(objParelyCheckboxCustomsetting.Send_for_Signature__c == true,true,false)}">
+    <li id="first_tab_header" class="{!if(objParelyCheckboxCustomsetting.Send_for_Signature__c == true && (selectedTab == 'first_tab__item' || selectedTab == null || selectedTab == '') ,'slds-tabs_default__item slds-is-active','slds-tabs_default__item')}" title="First Stage Question" role="presentation">
+      <a class="slds-tabs_default__link"  role="tab" tabindex="-1" aria-selected="false" aria-controls="first_tab" id="first_tab__item" onclick="ContractName(this.id);">Send for Signature</a>
+    </li>
+    </apex:outputText>
+    
+    <apex:outputText rendered="{!if(objParelyCheckboxCustomsetting.Request_Contract__c == true,true,false)}">
+       <li id="second_tab_header" class="{!if(objParelyCheckboxCustomsetting.Request_Contract__c == true && selectedTab == 'second_tab__item','slds-tabs_default__item slds-is-active',if(objParelyCheckboxCustomsetting.Send_for_Signature__c == false && (selectedTab == null || selectedTab == ''),'slds-tabs_default__item slds-is-active','slds-tabs_default__item'))}" title="Second Stage Question" role="presentation">
+      <a class="slds-tabs_default__link"  role="tab" tabindex="0" aria-selected="true" aria-controls="second_tab" id="second_tab__item" onclick="ContractName(this.id);">Request a Contract</a>
+    </li>
+    </apex:outputText>
+   
+    
+    <apex:outputText rendered="{!if(objParelyCheckboxCustomsetting.Negotiate_Contract__c == true,true,false)}">
+       <li id="third_tab_header" class="{!if(objParelyCheckboxCustomsetting.Negotiate_Contract__c == true && selectedTab == 'third_tab__item','slds-tabs_default__item slds-is-active',if(objParelyCheckboxCustomsetting.Send_for_Signature__c == false && objParelyCheckboxCustomsetting.Request_Contract__c == false && (selectedTab == null || selectedTab == ''),'slds-tabs_default__item slds-is-active','slds-tabs_default__item'))}" title="Second Stage Question" role="presentation">
+      <a class="slds-tabs_default__link" role="tab" tabindex="0" aria-selected="true" aria-controls="third_tab" id="third_tab__item" onclick="ContractName(this.id);">Negotiate Contract</a>
+    </li>
+    </apex:outputText>
+    
+    <apex:outputText rendered="{!if(objParelyCheckboxCustomsetting.Internal_Review__c == true,true,false)}">
+       <li id="fourth_tab_header" class="{!if(objParelyCheckboxCustomsetting.Internal_Review__c == true && selectedTab == 'fourth_tab__item','slds-tabs_default__item slds-is-active',if(objParelyCheckboxCustomsetting.Send_for_Signature__c == false && objParelyCheckboxCustomsetting.Request_Contract__c == false && objParelyCheckboxCustomsetting.Negotiate_Contract__c == false && (selectedTab == null || selectedTab == ''),'slds-tabs_default__item slds-is-active','slds-tabs_default__item'))}" title="Second Stage Question" role="presentation">
+      <a class="slds-tabs_default__link" role="tab" tabindex="0" aria-selected="true" aria-controls="fourth_tab" id="fourth_tab__item" onclick="ContractName(this.id);">Request a Review</a>
+    </li>
+    </apex:outputText>
+
+    <apex:outputText rendered="{!if(objParelyCheckboxCustomsetting.X3rd_Party_Paper__c == true,true,false)}">
+       <li id="fifth_tab_header" class="{!if(objParelyCheckboxCustomsetting.X3rd_Party_Paper__c == true && selectedTab == 'fifth_tab__item','slds-tabs_default__item slds-is-active',if(objParelyCheckboxCustomsetting.Send_for_Signature__c == false && objParelyCheckboxCustomsetting.Request_Contract__c == false && objParelyCheckboxCustomsetting.Internal_Review__c == false && objParelyCheckboxCustomsetting.Negotiate_Contract__c == false && (selectedTab == null || selectedTab == ''),'slds-tabs_default__item slds-is-active','slds-tabs_default__item'))}" title="Second Stage Question" role="presentation">
+      <a class="slds-tabs_default__link" role="tab" tabindex="0" aria-selected="true" aria-controls="fifth_tab" id="fifth_tab__item" onclick="ContractName(this.id);">Submit a 3rd Party Paper</a>
+    </li>
+    </apex:outputText> 
+  </ul> 
+    </apex:outputpanel>
+  
+  
+    <!--first tab start -->
+<apex:outputPanel id="tab1">
+    <apex:outputText rendered="{!if(objParelyCheckboxCustomsetting.Send_for_Signature__c == true && (selectedTab == 'first_tab__item' || selectedTab == null || selectedTab == ''),true,false)}">   
+    <div id="first_tab" class="slds-tabs_default__content slds-show" role="tabpanel" aria-labelledby="first_tab__item">   
+                <div closertotopclass="project-canvas-element--closer-to-top">
+                    <div class="slds-text-title slds-text-color_default">Send a new contract to prospect/customer for e-signature</div>
+                </div>
+                <div closertotopclass="project-canvas-element--closer-to-top">
+                    <div class="slds-form-element slds-m-top_large"><label class="slds-form-element__label"><span>Template</span></label>
+                        <div class="slds-form-element__control">
+                            <div class="slds-select_container"><!--<select class="slds-select"><option value="">Select a template</option><option value="Option One">MSA</option><option value="Option Two">NDA</option><option value="Option Three">Statement of work</option></select>-->
+                                <apex:selectList styleclass="slds-select" size="1" multiselect="false" onchange="acctfun(this.value);">
+                                    <apex:selectOptions value="{!options}"/>
+                                </apex:selectList>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <apex:outputPanel id="accName">
+                    <div closertotopclass="project-canvas-element--closer-to-top">
+                        <div class="slds-form-element slds-m-top_large "><label class="slds-form-element__label"><span>Contract name</span></label>
+                            <div class="slds-form-element__control"><apex:inputText StyleClass="slds-input" value="{!accountName1}"/></div>
+                        </div>
+                    </div>
+                </apex:outputPanel>             
+                <div closertotopclass="project-canvas-element--closer-to-top">
+                    <div class="slds-form-element slds-m-top_large"><label class="slds-form-element__label"><span>Chief negotiator</span></label>
+                        <div class="slds-form-element__control">
+                            <div class="slds-select_container"><!--<select class="slds-select"><option value="">Select a Chief negotiator</option><option value="Option One">Lilian Caldeira</option><option value="Option Two">Roman Kisin</option><option value="Option Three">Saba Mirza</option></select>-->
+                                <apex:selectList styleclass="slds-select" size="1" onchange="acctfunction(this.value);">
+                                    <apex:selectOptions value="{!options1}"/>
+                                </apex:selectList>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div closertotopclass="project-canvas-element--closer-to-top"><apex:commandButton Styleclass="slds-button slds-m-top_xx-large slds-theme_neutral slds-button_neutral" value="Create contract" reRender="msg" onclick="checkEmails();" status="uploadings"/></div>
+
+    </div> 
+       </apex:outputText>
+    </apex:outputPanel>
+     <!--first tab end -->
+     
+  <!--second tab start -->
+  <apex:outputPanel id="tab2">
+  <apex:outputText rendered="{!if(objParelyCheckboxCustomsetting.Request_Contract__c == true && selectedTab == 'second_tab__item',true,if((selectedTab == '' || selectedTab == null) && objParelyCheckboxCustomsetting.Request_Contract__c == true && objParelyCheckboxCustomsetting.Send_for_Signature__c == false,true,false))}">
+   <div id="second_tab" class="{!if(objParelyCheckboxCustomsetting.Request_Contract__c == true, 'slds-tabs_default__content slds-show','slds-tabs_default__content slds-hide')}" role="tabpanel" aria-labelledby="second_tab__item">
+    <div closertotopclass="project-canvas-element--closer-to-top">
+                    <div class="slds-text-title slds-text-color_default">Request contract administrator/legal to generate a new contract and send to prospect/customer</div>
+                </div>
+                <div closertotopclass="project-canvas-element--closer-to-top">
+                    <div class="slds-form-element slds-m-top_large"><label class="slds-form-element__label"><span>Template</span></label>
+                        <div class="slds-form-element__control">
+                            <div class="slds-select_container"><!--<select class="slds-select"><option value="">Select a template</option><option value="Option One">Master services agreement</option><option value="Option Two">NDA</option><option value="Option Three">Statement of work</option></select>-->
+                                <div class="slds-select_container"><!--<select class="slds-select"><option value="">Select a template</option><option value="Option One">MSA</option><option value="Option Two">NDA</option><option value="Option Three">Statement of work</option></select>-->
+                                    <apex:selectList styleclass="slds-select" size="1" multiselect="false" onchange="acctfun(this.value);">
+                                    <apex:selectOptions value="{!options}"/>
+                                   </apex:selectList>
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <apex:outputPanel id="accName1">
+                    <div closertotopclass="project-canvas-element--closer-to-top">
+                        <div class="slds-form-element slds-m-top_large "><label class="slds-form-element__label"><span>Contract name</span></label>
+                            <div class="slds-form-element__control"><apex:inputText StyleClass="slds-input" value="{!accountName2}"/></div>
+                        </div>
+                    </div>
+                </apex:outputPanel>
+                <div closertotopclass="project-canvas-element--closer-to-top">
+                    <div class="slds-form-element slds-m-top_large "><label class="slds-form-element__label"><span>Counterparty contact</span></label>
+                        <div class="slds-form-element__control"><input class="slds-input" type="text" placeholder="" value="{!objAccountContactRole.Contact.Email}"/></div>
+                    </div>
+                </div>
+                <div closertotopclass="project-canvas-element--closer-to-top">
+                    <div class="slds-form-element slds-m-top_large "><label class="slds-form-element__label"><span>Additional counterparty contact</span></label>
+                        <div class="slds-form-element__control"><input class="slds-input" type="text" id="emails"/></div>
+                    </div>
+                </div>
+                <div closertotopclass="project-canvas-element--closer-to-top">
+                    <div class="slds-form-element slds-m-top_large"><label class="slds-form-element__label"><span>Chief negotiator</span></label>
+                        <div class="slds-form-element__control">
+                            <div class="slds-select_container"><!--<select class="slds-select"><option value="">Select a Chief negotiator</option><option value="Option One">Lilian Caldeira</option><option value="Option Two">Roman Kisin</option><option value="Option Three">Saba Mirza</option></select>-->
+                                <apex:selectList styleclass="slds-select" size="1" onchange="acctfunction(this.value);">
+                                    <apex:selectOptions value="{!options1}"/>
+                                </apex:selectList>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--<div closertotopclass="project-canvas-element--closer-to-top"><button class="slds-button slds-m-top_xx-large slds-theme_neutral   slds-button_neutral"><span>Create contract</span></button></div>-->
+                <div closertotopclass="project-canvas-element--closer-to-top"><apex:commandButton Styleclass="slds-button slds-m-top_xx-large slds-theme_neutral slds-button_neutral" value="Create contract" reRender="msg" onclick="checkEmails();" status="uploadings"/></div>
+   </div>
+      </apex:outputText>
+    </apex:outputPanel>
+    
+    <apex:outputPanel id="tab3">
+    <apex:outputText rendered="{!if(objParelyCheckboxCustomsetting.Negotiate_Contract__c == true && selectedTab == 'third_tab__item',true,if((selectedTab == '' || selectedTab == null) && objParelyCheckboxCustomsetting.Negotiate_Contract__c == true && objParelyCheckboxCustomsetting.Request_Contract__c == false && objParelyCheckboxCustomsetting.Send_for_Signature__c == false,true,false))}">
+    <div id="third_tab" class="{!if(objParelyCheckboxCustomsetting.Negotiate_Contract__c == true, 'slds-tabs_default__content slds-show','slds-tabs_default__content slds-hide')}" role="tabpanel" aria-labelledby="third_tab__item">
+     <div closertotopclass="project-canvas-element--closer-to-top">
+                    <div class="slds-text-title slds-text-color_default">Send a new contract to prospect/customer for review</div>
+                </div>
+                <div closertotopclass="project-canvas-element--closer-to-top">
+                    <div class="slds-form-element slds-m-top_large"><label class="slds-form-element__label"><span>Template</span></label>
+                        <div class="slds-form-element__control">
+                            <div class="slds-select_container"><!--<select class="slds-select"><option value="">Select a template</option><option value="Option One">MSA</option><option value="Option Two">NDA</option><option value="Option Three">Statement of work</option></select>-->
+                                <apex:selectList styleclass="slds-select" size="1" multiselect="false" onchange="acctfun(this.value);">
+                                    <apex:selectOptions value="{!options}"/>
+                                </apex:selectList>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <apex:outputPanel id="accName2">
+                        <div closertotopclass="project-canvas-element--closer-to-top">
+                            <div class="slds-form-element slds-m-top_large "><label class="slds-form-element__label"><span>Contract name</span></label>
+                                <div class="slds-form-element__control"><apex:inputText StyleClass="slds-input" value="{!accountName3}"/></div>
+                            </div>
+                        </div>
+                </apex:outputPanel>
+                <div closertotopclass="project-canvas-element--closer-to-top">
+                    <div class="slds-form-element slds-m-top_large "><label class="slds-form-element__label"><span>Counterparty contact</span></label>
+                        <div class="slds-form-element__control"><input class="slds-input" type="text" placeholder="" value="{!objAccountContactRole.Contact.Email}"/></div>
+                    </div>
+                </div>
+                <div closertotopclass="project-canvas-element--closer-to-top">
+                    <div class="slds-form-element slds-m-top_large "><label class="slds-form-element__label"><span>Additional counterparty contact</span></label>
+                        <div class="slds-form-element__control"><input class="slds-input" type="text" id="emails"/></div>
+                    </div>
+                </div>
+                <div closertotopclass="project-canvas-element--closer-to-top">
+                     <div class="slds-form-element__row">
+                       <div class="slds-form-element">
+                          <label class="slds-checkbox">
+                                <apex:inputcheckbox id="isinstance2" styleclass="slds-input" value="{!docBool}" />
+                                   <span class="slds-checkbox--faux"></span>
+                                   <span class="slds-form-element__label">Send a Word document (Classic)</span>
+                          </label>
+                       </div>
+                    </div>
+                </div>
+                <div closertotopclass="project-canvas-element--closer-to-top">
+                    <div class="slds-form-element slds-m-top_large"><label class="slds-form-element__label"><span>Chief negotiator</span></label>
+                        <div class="slds-form-element__control">
+                            <div class="slds-select_container"><!--<select class="slds-select"><option value="Option One">Roman Kisin</option><option value="Option Two">Lilian Caldeira</option><option value="Option Three">Saba Mirza</option></select>-->
+                                <apex:selectList styleclass="slds-select" size="1" onchange="acctfunction(this.value);">
+                                    <apex:selectOptions value="{!options1}"/>
+                                </apex:selectList>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div closertotopclass="project-canvas-element--closer-to-top"><apex:commandButton Styleclass="slds-button slds-m-top_xx-large slds-theme_neutral slds-button_neutral" value="Create contract" reRender="msg" onclick="checkEmails();" status="uploadings"/></div>
+   </div>
+   </apex:outputText>
+    </apex:outputPanel>
+    
+    
+   <apex:outputPanel id="tab4">
+   <apex:outputText rendered="{!if(objParelyCheckboxCustomsetting.Internal_Review__c == true && selectedTab == 'fourth_tab__item',true,if((selectedTab == '' || selectedTab == null) && objParelyCheckboxCustomsetting.Internal_Review__c == true && objParelyCheckboxCustomsetting.Negotiate_Contract__c == false && objParelyCheckboxCustomsetting.Request_Contract__c == false && objParelyCheckboxCustomsetting.Send_for_Signature__c == false,true,false))}">
+  <div id="fourth_tab" class="{!if(objParelyCheckboxCustomsetting.Internal_Review__c == true, 'slds-tabs_default__content slds-show','slds-tabs_default__content slds-hide')}" role="tabpanel" aria-labelledby="fourth_tab__item">
+    <div closertotopclass="project-canvas-element--closer-to-top">
+                    <div class="slds-text-title slds-text-color_default">Create a new contract and invite internal reviewers</div>
+                </div>
+                <div closertotopclass="project-canvas-element--closer-to-top">
+                    <div class="slds-form-element slds-m-top_large"><label class="slds-form-element__label"><span>Template</span></label>
+                        <div class="slds-form-element__control">
+                            <div class="slds-select_container"><!--<select class="slds-select"><option value="">Select a template</option><option value="Option One">MSA</option><option value="Option Two">NDA</option><option value="Option Three">Statement of work</option></select>-->
+                                <apex:selectList styleclass="slds-select" size="1" multiselect="false" onchange="acctfun(this.value);">
+                                    <apex:selectOptions value="{!options}"/>
+                                </apex:selectList>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <apex:outputPanel id="accName3">
+                    <div closertotopclass="project-canvas-element--closer-to-top">
+                        <div class="slds-form-element slds-m-top_large "><label class="slds-form-element__label"><span>Contract name</span></label>
+                            <div class="slds-form-element__control"><apex:inputText StyleClass="slds-input" value="{!accountName4}"/></div>
+                        </div>
+                    </div>              
+                </apex:outputPanel>
+                <div closertotopclass="project-canvas-element--closer-to-top">
+                    <div class="slds-form-element slds-m-top_large "><label class="slds-form-element__label"><span>Counterparty contact</span></label>
+                        <div class="slds-form-element__control"><input class="slds-input" type="text" placeholder="" value="{!objAccountContactRole.Contact.Email}"/></div>
+                    </div>
+                </div>
+                <div closertotopclass="project-canvas-element--closer-to-top">
+                    <div class="slds-form-element slds-m-top_large "><label class="slds-form-element__label"><span>Additional counterparty contact</span></label>
+                        <div class="slds-form-element__control"><input class="slds-input" type="text" id="emails"/></div>
+                    </div>
+                </div>
+                <div closertotopclass="project-canvas-element--closer-to-top">
+                     <div class="slds-form-element__row">
+                       <div class="slds-form-element">
+                          <label class="slds-checkbox">
+                                <apex:inputcheckbox id="isinstance3" styleclass="slds-input" value="{!docBool}" />
+                                   <span class="slds-checkbox--faux"></span>
+                                   <span class="slds-form-element__label">Send a Word document (Classic)</span>
+                          </label>
+                       </div>
+                    </div>
+                </div>
+                <div closertotopclass="project-canvas-element--closer-to-top">
+                    <div class="slds-form-element slds-m-top_large"><label class="slds-form-element__label"><span>Chief negotiator</span></label>
+                        <div class="slds-form-element__control">
+                            <div class="slds-select_container"><!--<select class="slds-select"><option value="">Select a Chief negotiator</option><option value="Option One">Lilian Caldeira</option><option value="Option Two">Roman Kisin</option><option value="Option Three">Saba Mirza</option></select>-->
+                                <apex:selectList styleclass="slds-select" size="1" onchange="acctfunction(this.value);">
+                                    <apex:selectOptions value="{!options1}"/>
+                                </apex:selectList>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div closertotopclass="project-canvas-element--closer-to-top"><apex:commandButton Styleclass="slds-button slds-m-top_xx-large slds-theme_neutral slds-button_neutral" value="Create contract" reRender="msg" onclick="checkEmails();" status="uploadings"/></div>
+   </div>
+    </apex:outputText>
+    </apex:outputPanel>
+    
+    
+   <apex:outputPanel id="tab5">
+   <apex:outputText rendered="{!if(objParelyCheckboxCustomsetting.X3rd_Party_Paper__c == true && selectedTab == 'fifth_tab__item',true,if((selectedTab == '' || selectedTab == null) && objParelyCheckboxCustomsetting.X3rd_Party_Paper__c == true && objParelyCheckboxCustomsetting.Internal_Review__c == false && objParelyCheckboxCustomsetting.Negotiate_Contract__c == false && objParelyCheckboxCustomsetting.Request_Contract__c == false && objParelyCheckboxCustomsetting.Send_for_Signature__c == false,true,false))}">
+   <div id="fifth_tab" class="{!if(objParelyCheckboxCustomsetting.X3rd_Party_Paper__c == true, 'slds-tabs_default__content slds-show','slds-tabs_default__content slds-hide')}" role="tabpanel" aria-labelledby="fifth_tab__item">
+     <div closertotopclass="project-canvas-element--closer-to-top">
+                    <div class="slds-text-title slds-text-color_default">Upload customer created contract</div>
+                </div>      
+                <div closertotopclass="project-canvas-element--closer-to-top">
+                    <div class="slds-form-element slds-m-top_large "><label class="slds-form-element__label"><span>Contract name</span></label>
+                        <div class="slds-form-element__control"><apex:inputfield StyleClass="slds-input" value="{!objAccount.Name}"/></div>
+                    </div>
+                </div>
+                <div closertotopclass="project-canvas-element--closer-to-top">
+                    <div class="slds-form-element slds-m-top_large"><label class="slds-form-element__label"><span>Chief negotiator</span></label>
+                        <div class="slds-form-element__control">
+                            <div class="slds-select_container"><!--<select class="slds-select"><option value="">Select a Chief negotiator</option><option value="Option One">Lilian Caldeira</option><option value="Option Two">Roman Kisin</option><option value="Option Three">Saba Mirza</option></select>-->
+                                <apex:selectList styleclass="slds-select" size="1" onchange="acctfunction(this.value);">
+                                    <apex:selectOptions value="{!options1}"/>
+                                </apex:selectList>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div closertotopclass="project-canvas-element--closer-to-top">
+                    <div class="slds-form-element slds-m-top_large"><span class="slds-form-element__label">Upload 3rd party paper</span>
+                        <div class="slds-form-element__control">
+                            <div class="slds-file-selector slds-file-selector_files">
+                                <!--<div class="slds-file-selector__dropzone"><input accept="image/png" class="slds-file-selector__input slds-assistive-text" type="file" id="file-input--LMKcXDDy_Owgjpo04Tu" value="{!attachment.body}" filename="{!attachment.name}"/><label class="slds-file-selector__body" for="file-input--LMKcXDDy_Owgjpo04Tu"><span class="slds-file-selector__button slds-button slds-button_neutral"><svg aria-hidden="true" class="slds-button__icon slds-button__icon_left"></svg>Upload Files</span><span class="slds-file-selector__text slds-medium-show">or Drop Files</span></label></div>-->
+                                <input type= "file" Id= "fileinput"  multiple="multiple" accept=".doc,.docx,.pdf"/>                                
+                            </div><br/>
+                              <div><span id="fileID" style="color:red;"></span></div>
+                        </div>
+                    </div>
+                </div>     
+                 <div closertotopclass="project-canvas-element--closer-to-top">
+                <apex:commandButton Styleclass="slds-button slds-m-top_xx-large slds-theme_neutral slds-button_neutral" value="Create contract"  onclick="uploadFiles(); return false;" reRender="msg"/>
+                <apex:actionFunction name="saveFileAF" action="{!createContract}" rerender="form"  status="uploadings">
+                    <apex:param name="base64File" value="" assignTo="{!base64}"/>
+                    <apex:param name="fileName" value="" assignTo="{!fileName}"/>
+                </apex:actionFunction>                 
+                </div> 
+   </div>
+   </apex:outputText>
+    </apex:outputPanel>
+<!--second tab end -->
+</div>
+</apex:form>
+</apex:page>

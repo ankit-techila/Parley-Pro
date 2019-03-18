@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ConnectedApp xmlns="http://soap.sforce.com/2006/04/metadata">
+    <contactEmail>roman+pp@parleypro.com</contactEmail>
+    <iconUrl>https://login.salesforce.com/logos/Standard/contract/icon.png</iconUrl>
+    <label>Parley Pro Connected App</label>
+    <logoUrl>https://login.salesforce.com/logos/Standard/contract/logo.svg</logoUrl>
+    <oauthConfig>
+        <callbackUrl>https://test-client.test.0eba77fd.svc.dockerapp.io:5080/oauth2/callback</callbackUrl>
+        <certificate>MIIHOjCCBiKgAwIBAgIRAPHckx/z0sqVIevn+5WoUkcwDQYJKoZIhvcNAQELBQAwgZUxCzAJBgNVBAYTAkdCMRswGQYDVQQIExJHcmVhdGVyIE1hbmNoZXN0ZXIxEDAOBgNVBAcTB1NhbGZvcmQxGDAWBgNVBAoTD1NlY3RpZ28gTGltaXRlZDE9MDsGA1UEAxM0U2VjdGlnbyBSU0EgT3JnYW5pemF0aW9uIFZhbGlkYXRpb24gU2VjdXJlIFNlcnZlciBDQTAeFw0xOTAzMDgwMDAwMDBaFw0yMDA2MDUyMzU5NTlaMIGzMQswCQYDVQQGEwJVUzEOMAwGA1UEERMFOTQwNjIxEzARBgNVBAgTCkNhbGlmb3JuaWExFjAUBgNVBAcTDUVtZXJhbGQgSGlsbHMxFTATBgNVBAkTDDMgVmVudGFuYSBjdDEYMBYGA1UEChMPUGFybGV5IFBybyBJbmMuMRwwGgYDVQQLExNQcmVtaXVtU1NMIFdpbGRjYXJkMRgwFgYDVQQDDA8qLnBhcmxleXByby5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDRKR7M8hnQBvGkrXXmrc6o7UQDzwCUzte8wW2f0gJezhYmPYG5G/8x4TQHLvoed+vW1bQkR7RGW9Rjuf4p8cTQkXy+WiAOOVoTa/5GpDQag+XTH5fcpYjcHhNkvbAhpymoliAeXMx6LBVAOxBikuFsqHn5O5oxICe3bava7PlJgbigsU6TuaumvjXximZBHrBAM5MipdgU1asES2txIWyN66KO6x7NjSmJbhUc8ZXs2XAk2fpZ3J9V27pIAn719UfTQBCgZTWVWzZM1hkNRj6iVUAopIERuM4q31VIJtcZ5IzYvIz14pS+M09Ha9d4OMM6arYOece0nMCt9iB+hHL5AgMBAAGjggNjMIIDXzAfBgNVHSMEGDAWgBQX2dYlJ2f5McJJQ9kwNkSMbKlP6zAdBgNVHQ4EFgQUe3298uHy2e4EXqZJK+6P/7yDZaAwDgYDVR0PAQH/BAQDAgWgMAwGA1UdEwEB/wQCMAAwHQYDVR0lBBYwFAYIKwYBBQUHAwEGCCsGAQUFBwMCMEoGA1UdIARDMEEwNQYMKwYBBAGyMQECAQMEMCUwIwYIKwYBBQUHAgEWF2h0dHBzOi8vc2VjdGlnby5jb20vQ1BTMAgGBmeBDAECAjBaBgNVHR8EUzBRME+gTaBLhklodHRwOi8vY3JsLnNlY3RpZ28uY29tL1NlY3RpZ29SU0FPcmdhbml6YXRpb25WYWxpZGF0aW9uU2VjdXJlU2VydmVyQ0EuY3JsMIGKBggrBgEFBQcBAQR+MHwwVQYIKwYBBQUHMAKGSWh0dHA6Ly9jcnQuc2VjdGlnby5jb20vU2VjdGlnb1JTQU9yZ2FuaXphdGlvblZhbGlkYXRpb25TZWN1cmVTZXJ2ZXJDQS5jcnQwIwYIKwYBBQUHMAGGF2h0dHA6Ly9vY3NwLnNlY3RpZ28uY29tMCkGA1UdEQQiMCCCDyoucGFybGV5cHJvLmNvbYINcGFybGV5cHJvLmNvbTCCAX4GCisGAQQB1nkCBAIEggFuBIIBagFoAHYAu9nfvB+KcbWTlCOXqpJ7RzhXlQqrUugakJZkNo4e0YUAAAFpXYWDYwAABAMARzBFAiBItHlWMo08NeX7YHSS/4SlCFWS4cY8rgQOoS2P1oxbOAIhANg5W7BMMjVm1FKRxmITInVONkdiMeJ9vxxIxxzLTXEMAHcAXqdz+d9WwOe1Nkh90EngMnqRmgyEoRIShBh1loFxRVgAAAFpXYWDpAAABAMASDBGAiEA+R4uQNnYcneGwgCwwWK8ZTlzsp0gVtdDg2dWP2do1rgCIQDb5aldWTZyOxjbWf1mJBnbQSmG5lk+kiXAE4758dcspwB1APCVpFnyANGCQBAtL5OIjq1L/h1H45nh0DSmsKiqjrJzAAABaV2Fg64AAAQDAEYwRAIgG+uuES4J5+yC5C5fZgmetmgGoTF+/m4KxraUv135KU4CIFaaeTXxAP40qd0oKNX9DpHOou0gfCAaPv3Y0WNfFXBzMA0GCSqGSIb3DQEBCwUAA4IBAQBVy7L2vT0RTXV80CuMiJJcgbgNO3X14MLJwEBV85mEEMjXdbeENJwDkSLFUdfRGJsomvCWPNVdzgrUfU1I6jWzhChn0BkGszPVavjcw7KDNTVziVe35qt86ivHdC6HK93IPAN55E/vnRj3YdJMdZ3rB3v32G9ZhYoidJLYZtap/rccXYEk6ix/C2F0LjUuqHNhhcmada3I3gAbHT32YjZJsWCX4Cbw2wgX77jdxLPEpYxyvBtBDylMYHTaZKFRVrxmGL90xrcr+ZUxJxmN4RMk4PQTXVO7ouSMTT+jDk3nMyzN5Kzs+v1zWy+pdkUjSdJHS9V+XcmLnzPoFcG/5pog</certificate>
+        <consumerKey>3MVG9KsVczVNcM8zqL2c9IxUKmlMEngVjwx_zmDws1LiQy5COuqiEsRnWP9GrV8iocxNzZT_s7iiEl0HZEk_P</consumerKey>
+        <scopes>Basic</scopes>
+        <scopes>Api</scopes>
+        <scopes>Web</scopes>
+        <scopes>Full</scopes>
+        <scopes>Chatter</scopes>
+        <scopes>CustomApplications</scopes>
+        <scopes>RefreshToken</scopes>
+        <scopes>OpenID</scopes>
+        <scopes>CustomPermissions</scopes>
+        <scopes>Wave</scopes>
+        <scopes>Eclair</scopes>
+    </oauthConfig>
+</ConnectedApp>

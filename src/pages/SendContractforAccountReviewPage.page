@@ -1,0 +1,145 @@
+<apex:page standardController="Account" extensions="SendAccountContractforReviewController">
+    <head>
+        <apex:includeScript value="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"/>
+        <script>
+         var check = '{!JSENCODE(bool)}';
+         </script>
+     <script type='text/javascript' src="//code.jquery.com/ui/1.11.4/jquery-ui.js" /> 
+     <apex:includeScript value="{!URLFOR($Resource.ParleyJS, 'ParleyPro.Js')}"/>
+        <style>
+            
+            #container {
+                background: #6699FF;
+                margin: auto;
+                width: 500px;
+                height: 700px;
+                padding-top: 30px;
+                font-family: helvetica, arial, sans-serif;
+                }
+                
+                
+            h1 {
+                color: #0C8EFF;
+                }
+                .message .messageText h4 {
+                display: -moz-inline-grid;
+
+            }
+            .message .messageText {
+                font-size: 1.0em;
+                color: #fff !important;
+            }
+            .message {
+                background-color:#04844b;
+                border-style:none;
+                color:#fff;
+            }
+            .body, td{
+                color:#fff;
+            }
+            .Contract-created-Suc {
+              width: 444px;
+              height: 43px;
+              font-family: OpenSans;
+              font-size: 32px;
+              font-weight: normal;
+              font-style: normal;
+              font-stretch: normal;
+              line-height: normal;
+              letter-spacing: normal;
+              text-align: center;
+              color: rgba(0, 0, 0, 0.85);
+            }
+            
+        </style>
+    </head>
+   
+        <body>
+            <apex:form styleClass="slds-form" id="theform">
+                <apex:actionFunction action="{!createContract}" name="createContract" reRender="frm" oncomplete="onPageLoadJS();">           
+                </apex:actionFunction>
+                <apex:actionFunction action="{!onSamePageLoad}" name="onPageLoadAF">            
+                </apex:actionFunction>
+                <apex:slds />
+                <apex:pageMessages />           
+                <br/>
+                 <center>  <br/> <br/> <br/>
+                <apex:outputPanel rendered="{!if(Spinnerbool == false,true,false)}">               
+<div class="lds-css ng-scope"><div style="width:100%;height:100%" class="lds-rolling"><div></div></div>
+<style type="text/css">
+@keyframes lds-rolling {
+  0% {
+    -webkit-transform: translate(-50%, -50%) rotate(0deg);
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    -webkit-transform: translate(-50%, -50%) rotate(360deg);
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+@-webkit-keyframes lds-rolling {
+  0% {
+    -webkit-transform: translate(-50%, -50%) rotate(0deg);
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  100% {
+    -webkit-transform: translate(-50%, -50%) rotate(360deg);
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+.lds-rolling {
+  position: relative;
+}
+.lds-rolling div,
+.lds-rolling div:after {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  border: 20px solid #98e582;
+  border-top-color: transparent;
+  border-radius: 50%;
+}
+.lds-rolling div {
+  -webkit-animation: lds-rolling 0.7s linear infinite;
+  animation: lds-rolling 0.7s linear infinite;
+  top: 100px;
+  left: 100px;
+}
+.lds-rolling div:after {
+  -webkit-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+.lds-rolling {
+  width: 80px !important;
+  height: 80px !important;
+  -webkit-transform: translate(-40px, -40px) scale(0.4) translate(40px, 40px);
+  transform: translate(-40px, -40px) scale(0.4) translate(40px, 40px);
+}
+</style></div>
+<div>The Contract is creating on Parley Pro, Please wait...</div>
+</apex:outputPanel>
+                     <apex:outputPanel rendered="{!if(Spinnerbool == true,true,false)}">
+                     <apex:outputPanel rendered="{!if(Message == 'Success',true,false)}">
+                        <div>
+                            <apex:image url="{!$Resource.SucessMessage}" style="width: 80px;height: 80px;background-color: #98e582;"/>
+                        </div>
+                         <div styleclass="Contract-created-Suc">Contract created Successfully!</div><br/><br/>
+                    </apex:outputPanel>
+                     <apex:outputPanel rendered="{!if(Message == 'failed',true,false)}">
+                        <div>
+                            <apex:image url="{!$Resource.WrongMessage}" style="width: 80px;height: 80px;"/>
+                        </div><br/>
+                         <div styleclass="Contract-created-Suc">Ooops, something went wrong...</div>
+                         <div styleclass="Contract-created-Suc">Unfortunately, we can't create a document on Parley Pro right now.</div><br/><br/>
+                    </apex:outputPanel>    
+                         <div closertotopclass="project-canvas-element--closer-to-top">
+                             <apex:commandButton Styleclass="slds-button slds-m-top_xx-large slds-theme_neutral slds-button_neutral" value="OK" action="{!backToRecord}"/>&nbsp;&nbsp;&nbsp;
+                             <apex:commandLink action="{!ReviewContractonParley}" target="_blank">
+                                 <apex:commandButton Styleclass="slds-button slds-m-top_xx-large slds-theme_neutral slds-button_neutral" value="Review contract on Parley Pro"  />
+                             </apex:commandlink>
+                         </div>
+                      </apex:outputPanel>
+                </center>
+            </apex:form>
+        </body>
+</apex:page>

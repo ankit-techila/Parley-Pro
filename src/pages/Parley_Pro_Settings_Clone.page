@@ -1,0 +1,57 @@
+<apex:page Controller="ParleyProNewContractController" standardStylesheets="false" sidebar="false" showHeader="true">
+        <apex:slds />
+    <apex:form >
+        <apex:pageMessages />
+                    <apex:commandButton value="Save" action="{!saveSettings}" styleClass="slds-button slds-button_brand slds-align_absolute-center" style="width:3cm;"/>
+                    <br/>
+                    <div>
+                    &nbsp;<span class="slds-form-element__label">API Key</span> &nbsp;<br/> 
+                    <apex:inputText value="{! apiKey}" title="API Key from Parley Pro" label="API Key" required="true" size="120" styleClass="slds-input" style="width:65%"/><br/>
+                    <br />
+                    &nbsp;<span class="slds-form-element__label">Server URL</span> &nbsp;<br/> 
+                    <apex:inputText value="{! serverURL}" title="Parley Pro Server URL" label="Server URL" required="true" size="120" styleClass="slds-input" style="width:65%"/><br/>
+                     <br />
+                    &nbsp;<span class="slds-form-element__label">Web App URL</span> &nbsp;<br/> 
+                    <apex:inputText value="{! webAppURL}" title="Web App URL" label="Web App URL" required="true" size="120" styleClass="slds-input" style="width:65%"/><br/>
+                     <br />
+                    <label class="slds-checkbox__label" for="checkbox-indeterminate-01">
+                       &nbsp; <span class="slds-form-element__label">Use standard Contract object</span>
+                    </label>
+                      <apex:inputCheckbox value="{!customsettingvalue}" styleClass="slds-checkbox"/>
+                      <br/><br/>
+                     </div>
+                     <h>Enable the Workflows</h><br/><br/>
+                     <div>
+                          <div>
+                              <apex:inputCheckbox value="{!sendforSignature}" styleClass="slds-checkbox"/>
+                              <label class="slds-checkbox__label" for="checkbox-indeterminate-01">
+                                   &nbsp; <span class="slds-form-element__label">Send for Signature</span>
+                              </label>
+                              
+                              <apex:inputCheckbox value="{!requestContract}" styleClass="slds-checkbox"/>
+                              <label class="slds-checkbox__label" for="checkbox-indeterminate-01">
+                                   &nbsp; <span class="slds-form-element__label">Request a Contract</span>
+                              </label>
+                              
+                              <apex:inputCheckbox value="{!NegotiateContract}" styleClass="slds-checkbox"/>
+                              <label class="slds-checkbox__label" for="checkbox-indeterminate-01">
+                                   &nbsp; <span class="slds-form-element__label">Negotiate Contract</span>
+                              </label>
+                          </div>
+                          
+                          <div>
+                              <apex:inputCheckbox value="{!internalReview}" styleClass="slds-checkbox"/>
+                              <label class="slds-checkbox__label" for="checkbox-indeterminate-01">
+                                   &nbsp; <span class="slds-form-element__label">Internal Review</span>
+                              </label>
+                              
+                              <apex:inputCheckbox value="{!thirdPartyPaper}" styleClass="slds-checkbox"/>
+                              <label class="slds-checkbox__label" for="checkbox-indeterminate-01">
+                                   &nbsp; <span class="slds-form-element__label">3rd Party Paper</span>
+                              </label>
+                          </div>
+                     </div>
+                     
+                    <apex:commandButton value="Save" action="{!saveSettings}" styleClass="slds-button slds-button_brand slds-align_absolute-center" style="width:3cm;"/>
+    </apex:form>
+</apex:page>
